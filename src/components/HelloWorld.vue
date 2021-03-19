@@ -1,42 +1,71 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-eslint" target="_blank" rel="noopener">eslint</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
+
+    <!-- <div id="carousel">
+      <img class="cloud9-item" src="../assets/logo.png" alt="Item #1">
+      <img class="cloud9-item" src="../assets/logo.png" alt="Item #2">
+      <img class="cloud9-item" src="../assets/logo.png" alt="Item #3">
+      <img class="cloud9-item" src="../assets/logo.png" alt="Item #4">
+      <img class="cloud9-item" src="../assets/logo.png" alt="Item #5">
+      <img class="cloud9-item" src="../assets/logo.png" alt="Item #6">
+    </div>
+    
+    <div id="buttons">
+      <button class="left">
+        ←
+      </button>
+      <button class="right">
+        →
+      </button>
+    </div> -->
   </div>
 </template>
 
 <script>
+// import '../plugins/cloud9carousel/jquery.cloud9carousel'
+import $ from "jquery";
+
 export default {
-  name: 'HelloWorld',
+  name: "HelloWorld",
   props: {
-    msg: String
-  }
-}
+    msg: String,
+  },
+  mounted() {
+    // $(window).click(() => {
+    //   $("#carousel").hide();
+    // });
+    // $("#carousel").Cloud9Carousel( {
+    //   buttonLeft: $("#buttons > .left"),
+    //   buttonRight: $("#buttons > .right"),
+    //   autoPlay: 1,
+    //   bringToFront: true
+    // } );
+  },
+  methods: {
+    test2: function () {
+      // 立即表達函式解決"異步"或"回掉函式"導致for循環先結束
+      // for (var i = 1; i <= 5; i++) {
+      //   (function (j) {
+      //     setTimeout(() => {
+      //       console.log(j);
+      //     }, 0);
+      //   })(i);
+      // }
+      // 閉包
+      // function wallet() {
+      //   let origin = 100;
+      //   return function saveMoney(save) {
+      //     origin = origin + save;
+      //     return origin;
+      //   };
+      // }
+      // let money = wallet();
+      // console.log(money(10));
+      // console.log(money(50));
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
