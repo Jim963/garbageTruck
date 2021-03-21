@@ -1,13 +1,19 @@
 import axios from "axios";
 
 const state = {
-  items: [],
+  baseData: [],
+  location: {},
 };
 
 const mutations = {
-  setData: function(state, items) {
-    state.items = items;
+  setData: function (state, items) {
+    state.baseData = items;
   },
+
+  setLocation: function (state, items) {
+    state.location = items;
+  },
+
 };
 
 const actions = {
@@ -19,15 +25,38 @@ const actions = {
         )
         .then((response) => {
           context.commit("setData", response.data);
+
           resolve(response);
         })
         .catch((error) => {
           console.log(error);
           reject(error);
         })
-        .finally(() => {});
+        .finally(() => {
+
+        });
     });
   },
+
+  catchLocation: function (context) {
+    return new Promise((resolve, reject) => {
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+          context.commit("setLocation", {
+            lat: Number(position.coords.latitude),
+            lng: Number(position.coords.longitude)
+          });
+          resolve(position);
+        });
+      } else {
+        // Browser doesn't support Geolocation
+        alert("未允許或遭遇錯誤！");
+        reject("錯誤")
+      }
+    })
+  },
+
 };
 
 export default {

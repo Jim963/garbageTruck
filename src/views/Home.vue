@@ -1,5 +1,7 @@
 <template>
   <div class="home">
+    <div id="carlist"></div>
+
     <!-- <img alt="Vue logo" src="../assets/logo.png" /> -->
     <HelloWorld msg="" />
 
@@ -7,7 +9,7 @@
     <div id="map"></div>
 
     <div>
-      <button class="btn btn-primary" @click="test">Test</button>
+      <button class="btn btn-primary">Test</button>
     </div>
   </div>
 </template>
@@ -31,8 +33,8 @@ export default {
       map: null,
 
       // 預設經緯度在信義區附近
-      lat: Number,
-      lng: Number,
+      // lat: Number,
+      // lng: Number,
       carNear: [],
       carmarker: [],
     };
@@ -43,21 +45,31 @@ export default {
   created: function () {},
   mounted: function () {
     this.catchLocation();
+    this.getBaseData();
     this.repeat();
   },
   computed: {
     ...mapState({
-      carsinfo: (state) => state.cars.items,
+      carsinfo: (state) => state.cars.baseData,
+      lat: (state) => state.cars.location.lat,
+      lng: (state) => state.cars.location.lng,
     }),
   },
 
   methods: {
-    test: function () {
-      let gamewin = window.open("http://localhost:8080/#/about");
-      // gamewin.location = "https://www.google.com/?hl=zh_tw";
-    },
     repeat: function () {
       const repeat = setInterval(this.getBaseData, 10000);
+    },
+    catchLocation: function () {
+      this.$store
+        .dispatch("cars/catchLocation")
+        .then((response) => {
+          // console.log(response);
+          this.initMap();
+        })
+        .catch((e) => {
+          console.log(e);
+        });
     },
     getBaseData: function () {
       let _this = this;
@@ -66,7 +78,7 @@ export default {
         .then((response) => {
           _this.deleteMarkers();
           _this.carNear = [];
-          console.log(response);
+          // console.log(response);
           response.data.forEach((value) => {
             _this.distance(value);
           });
@@ -75,24 +87,11 @@ export default {
           console.log(error);
         })
         .finally(() => {
+          console.log(this.carNear);
           _this.carNear.forEach((value, index) => {
-            this.tryyyy(value, index);
+            _this.setCarMarker(value, index);
           });
         });
-    },
-    catchLocation: function () {
-      let _this = this;
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-          console.log(position);
-          _this.lat = position.coords.latitude;
-          _this.lng = position.coords.longitude;
-          _this.initMap();
-        });
-      } else {
-        // Browser doesn't support Geolocation
-        alert("未允許或遭遇錯誤！");
-      }
     },
 
     // 建立地圖
@@ -126,7 +125,7 @@ export default {
       });
     },
 
-    // 建立地標
+    // 建立本身地標
     setMarker() {
       // 建立一個新地標
       const marker = new google.maps.Marker({
@@ -141,8 +140,15 @@ export default {
         },
       });
     },
-
-    tryyyy(value, index) {
+    // 刪除地標
+    deleteMarkers: function () {
+      this.carmarker.forEach(function (e) {
+        e.setMap(null);
+      });
+      this.carmarker = [];
+    },
+    // 建立車子地標
+    setCarMarker(value, index) {
       this.carmarker[index] = new google.maps.Marker({
         position: { lat: Number(value.Y), lng: Number(value.X) },
         map: this.map,
@@ -160,8 +166,8 @@ export default {
     distance(value) {
       let lat1 = this.lat,
         lng1 = this.lng,
-        lat2 = parseFloat(value.Y),
-        lng2 = parseFloat(value.X),
+        lat2 = Number(value.Y),
+        lng2 = Number(value.X),
         unit = "K";
 
       if (lat1 == lat2 && lng1 == lng2) {
@@ -188,16 +194,10 @@ export default {
           dist = dist * 0.8684;
         }
 
-        if (dist <= 1) {
+        if (dist <= 2) {
           this.carNear.push(value);
         }
       }
-    },
-    deleteMarkers: function () {
-      this.carmarker.forEach(function (e) {
-        e.setMap(null);
-      });
-      this.carmarker = [];
     },
   },
 };
