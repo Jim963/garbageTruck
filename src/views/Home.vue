@@ -1,11 +1,19 @@
 <template>
   <div class="home">
-    <div id="carlist"></div>
+    <div class="card" id="carlist">
+      <h3>目前共有{{ carNear.length }}台車</h3>
+      <li v-for="(item, index) in carNear" :key="index">
+        <h6>路線編號：{{ item.lineid }}</h6>
+        <p>位置:{{ item.location }}</p>
+        <p>發送GPS時間：{{ timeCal(item.time) }}分前</p>
+        <p>車牌 : {{ item.car }}</p>
+      </li>
+    </div>
 
     <!-- <img alt="Vue logo" src="../assets/logo.png" /> -->
     <HelloWorld msg="" />
 
-    <h3>My Google Maps Demo</h3>
+    <!-- <h3>My Google Maps Demo</h3> -->
     <div id="map"></div>
 
     <div>
@@ -194,10 +202,18 @@ export default {
           dist = dist * 0.8684;
         }
 
-        if (dist <= 2) {
+        if (dist <= 1) {
           this.carNear.push(value);
         }
       }
+    },
+
+    timeCal: function (time) {
+      let timeRange = this.$moment(new Date()).diff(
+        this.$moment(time),
+        "minutes"
+      );
+      return timeRange;
     },
   },
 };
@@ -205,8 +221,33 @@ export default {
 
 
 <style>
+::-webkit-scrollbar {
+  display: none;
+}
 #map {
-  height: 600px;
+  height: 100vh;
   width: 100%;
+}
+
+#carlist {
+  position: absolute;
+  height: 100vh;
+  width: 20vw;
+  z-index: 9999;
+  background: rgba(18, 121, 73, 0.842);
+  color: white;
+  overflow: scroll;
+  padding: 5px;
+}
+
+#carlist li {
+  list-style: none;
+  border-bottom: 2px dashed rgb(49, 207, 155);
+  padding-top: 10px;
+}
+
+#carlist li p {
+  margin: 0px;
+  padding: 10px;
 }
 </style>
