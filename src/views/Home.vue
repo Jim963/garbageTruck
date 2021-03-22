@@ -51,7 +51,7 @@ export default {
       carNear_time: [],
       carmarker: [],
       repeatAction: null,
-      stopRepeat: false,
+      choosingCar: [],
     };
   },
   components: {
@@ -73,9 +73,7 @@ export default {
 
   methods: {
     repeat: function () {
-      if (this.stopRepeat == false) {
-        this.repeatAction = setInterval(this.getBaseData, 10000);
-      }
+      this.repeatAction = setInterval(this.getBaseData, 10000);
     },
     catchLocation: function () {
       this.$store
@@ -106,10 +104,18 @@ export default {
           console.log(error);
         })
         .finally(() => {
-          console.log(this.carNear);
-          _this.carNear.forEach((value, index) => {
-            _this.setCarMarker(value, index);
-          });
+          console.log(_this.carNear);
+          if (_this.choosingCar.length == 0) {
+            _this.carNear.forEach((value, index) => {
+              _this.setCarMarker(value, index);
+            });
+          } else {
+            _this.carNear.forEach((value, index) => {
+              if (value.car == _this.choosingCar[0].car) {
+                _this.setCarMarker(value, index);
+              }
+            });
+          }
         });
     },
 
@@ -227,11 +233,12 @@ export default {
       return timeRange;
     },
 
+    //列表選擇車子
     chooseCar: function (value, carNumber) {
+      this.choosingCar = [];
       this.deleteMarkers();
       this.setCarMarker(value, carNumber);
-      this.stopRepeat == true;
-      window.clearInterval(this.repeatAction);
+      this.choosingCar.push({ car: value.car });
     },
   },
 };
