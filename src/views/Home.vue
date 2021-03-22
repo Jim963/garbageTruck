@@ -3,9 +3,9 @@
     <div class="card" id="carlist">
       <h3>目前共有{{ carNear.length }}台車</h3>
       <li v-for="(item, index) in carNear" :key="index">
-        <h6>路線編號：{{ item.lineid }}</h6>
+        <h5>發送GPS時間：{{ timeCal(item.time) }}分前</h5>
         <p>位置:{{ item.location }}</p>
-        <p>發送GPS時間：{{ timeCal(item.time) }}分前</p>
+        <p>路線編號：{{ item.lineid }}</p>
         <p>車牌 : {{ item.car }}</p>
       </li>
     </div>
@@ -44,6 +44,7 @@ export default {
       // lat: Number,
       // lng: Number,
       carNear: [],
+      carNear_time: [],
       carmarker: [],
     };
   },
@@ -88,7 +89,9 @@ export default {
           _this.carNear = [];
           // console.log(response);
           response.data.forEach((value) => {
-            _this.distance(value);
+            if (_this.distance(value) <= 2 && _this.timeCal(value.time) <= 10) {
+              _this.carNear.push(value);
+            }
           });
         })
         .catch((error) => {
@@ -171,6 +174,7 @@ export default {
       });
     },
 
+    // 計算車子與自身距離
     distance(value) {
       let lat1 = this.lat,
         lng1 = this.lng,
@@ -202,12 +206,11 @@ export default {
           dist = dist * 0.8684;
         }
 
-        if (dist <= 1) {
-          this.carNear.push(value);
-        }
+        return dist;
       }
     },
 
+    // 計算gps多久前發送
     timeCal: function (time) {
       let timeRange = this.$moment(new Date()).diff(
         this.$moment(time),
@@ -249,5 +252,6 @@ export default {
 #carlist li p {
   margin: 0px;
   padding: 10px;
+  text-align: left;
 }
 </style>
