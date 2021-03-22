@@ -2,7 +2,11 @@
   <div class="home">
     <div class="card" id="carlist">
       <h3>目前共有{{ carNear.length }}台車</h3>
-      <li v-for="(item, index) in carNear" :key="index">
+      <li
+        v-for="(item, index) in carNear"
+        :key="index"
+        @click="chooseCar(item, index)"
+      >
         <h5>發送GPS時間：{{ timeCal(item.time) }}分前</h5>
         <p>位置:{{ item.location }}</p>
         <p>路線編號：{{ item.lineid }}</p>
@@ -217,6 +221,11 @@ export default {
         "minutes"
       );
       return timeRange;
+    },
+
+    chooseCar: function (value, carNumber) {
+      this.deleteMarkers();
+      this.setCarMarker(value, carNumber);
     },
   },
 };
