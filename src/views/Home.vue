@@ -50,6 +50,8 @@ export default {
       carNear: [],
       carNear_time: [],
       carmarker: [],
+      repeatAction: null,
+      stopRepeat: false,
     };
   },
   components: {
@@ -71,7 +73,9 @@ export default {
 
   methods: {
     repeat: function () {
-      const repeat = setInterval(this.getBaseData, 10000);
+      if (this.stopRepeat == false) {
+        this.repeatAction = setInterval(this.getBaseData, 10000);
+      }
     },
     catchLocation: function () {
       this.$store
@@ -226,6 +230,8 @@ export default {
     chooseCar: function (value, carNumber) {
       this.deleteMarkers();
       this.setCarMarker(value, carNumber);
+      this.stopRepeat == true;
+      window.clearInterval(this.repeatAction);
     },
   },
 };
