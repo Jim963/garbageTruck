@@ -5,7 +5,7 @@
       <li
         v-for="(item, index) in carNear"
         :key="index"
-        @click="chooseCar(item, index)"
+        @click="chooseAction(item, index)"
       >
         <h5>發送GPS時間：{{ timeCal(item.time) }}分前</h5>
         <p>位置:{{ item.location }}</p>
@@ -109,11 +109,15 @@ export default {
             _this.carNear.forEach((value, index) => {
               _this.setCarMarker(value, index);
             });
-          } else {
+          } else if (_this.timeCal(_this.choosingCar[0].time) <= 10) {
             _this.carNear.forEach((value, index) => {
               if (value.car == _this.choosingCar[0].car) {
                 _this.setCarMarker(value, index);
               }
+            });
+          } else {
+            _this.carNear.forEach((value, index) => {
+              _this.setCarMarker(value, index);
             });
           }
         });
@@ -174,6 +178,8 @@ export default {
     },
     // 建立車子地標
     setCarMarker(value, index) {
+      console.log(value);
+
       this.carmarker[index] = new google.maps.Marker({
         position: { lat: Number(value.Y), lng: Number(value.X) },
         map: this.map,
@@ -234,7 +240,7 @@ export default {
     },
 
     //列表選擇車子
-    chooseCar: function (value, carNumber) {
+    chooseAction: function (value, carNumber) {
       this.choosingCar = [];
       this.deleteMarkers();
       this.setCarMarker(value, carNumber);
